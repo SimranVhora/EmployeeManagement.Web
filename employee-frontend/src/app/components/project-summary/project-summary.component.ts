@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../Shared/Services/api.service';
 import { EmployeeProjectSummary } from '../../Shared/Models/employee-project-summary.model';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-summary',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './project-summary.component.html',
-  styleUrl: './project-summary.component.scss'
+  styleUrls: ['./project-summary.component.scss']
 })
-export class ProjectSummaryComponent {
+export class ProjectSummaryComponent implements OnInit {
 summary: EmployeeProjectSummary[] = [];
   selectedEmployeeProjects: any[] | null = null;
   selectedEmployeeName = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {
+    console.log('ProjectSummaryComponent initialized');
+  }
 
   ngOnInit(): void {
     this.api.getEmployeeProjectSummary().subscribe(s => this.summary = s);
@@ -28,5 +32,8 @@ summary: EmployeeProjectSummary[] = [];
   closeDrill() {
     this.selectedEmployeeProjects = null;
     this.selectedEmployeeName = '';
+  }
+   backToEmployeeList() {
+   this.router.navigate(['/employees']);
   }
 }

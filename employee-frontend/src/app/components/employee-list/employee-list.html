@@ -1,58 +1,117 @@
-<p>employee-list works!</p>
-<div class="controls">
-  <div>
-    <label>Department:</label>
-    <select (change)="onDepartmentChange($any($event.target).value ? +$any($event.target).value : null)">
-      <option value="">All</option>
-      <option *ngFor="let d of departments" [value]="d.departmentID">{{ d.departmentName }}</option>
-    </select>
-  </div>
+<div class="container mt-4 employee-list">
 
-  <div>
-    <input type="text" placeholder="Search name or email" [(ngModel)]="searchText" />
-    <button (click)="onSearch()">Search</button>
-    <button (click)="clearFilters()">Clear</button>
-  </div>
+  <h3 class="mb-4">Employee List</h3>
+<!-- TOP ACTION BUTTONS -->
+<div class="d-flex justify-content-end mb-3 gap-2">
 
-  <div>
-    <label>Page size</label>
-    <select (change)="changePageSize(+$any($event.target).value)">
-      <option [value]="5">5</option>
-      <option [value]="10" selected>10</option>
-      <option [value]="25">25</option>
-    </select>
-  </div>
+  <!-- Add Employee -->
+  <button class="btn btn-success"
+          (click)="goToAddEmployee()">
+    ➕ Add Employee
+  </button>
+
+  <!-- Project Summary -->
+  <button class="btn btn-primary"
+          (click)="goToProjectSummary()">
+    📊 Project Summary
+  </button>
+
 </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th (click)="sortBy('firstName')">Name</th>
-      <th (click)="sortBy('email')">Email</th>
-      <th (click)="sortBy('departmentID')">Department</th>
-      <th (click)="sortBy('salary')">Salary</th>
-      <th (click)="sortBy('dateOfJoining')">Joining Date</th>
-      <th>Active</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let e of employees">
-      <td>{{ e.firstName }} {{ e.lastName }}</td>
-      <td>{{ e.email }}</td>
-      <td>
-        <!-- You may want to map departmentID to name on frontend; optionally send departmentName from API -->
-        {{ getDepartmentName(e.departmentID) }}
-      </td>
-      <td>{{ e.salary | currency }}</td>
-      <td>{{ e.dateOfJoining | date:'yyyy-MM-dd' }}</td>
-      <td>{{ e.isActive ? 'Yes' : 'No' }}</td>
-    </tr>
-  </tbody>
-</table>
+  <!-- FILTER CONTROLS -->
+  <div class="card shadow-sm p-3 mb-4">
+    <div class="row g-3 align-items-end">
 
-<!-- simple pagination -->
-<div class="pagination">
-  <button (click)="changePage(($any(filter).page ?? 1) - 1)" [disabled]="($any(filter).page ?? 1) <= 1">Prev</button>
-  <span>Page {{ $any(filter).page ?? 1 }}</span>
-  <button (click)="changePage(($any(filter).page ?? 1) + 1)" [disabled]="employees.length < ($any(filter).pageSize ?? 0)">Next</button>
+      <!-- Department Filter -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Department</label>
+        <select class="form-select"
+                (change)="onDepartmentChange($any($event.target).value ? +$any($event.target).value : null)">
+          <option value="">All</option>
+          <option *ngFor="let d of departments" [value]="d.departmentID">
+            {{ d.departmentName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Search -->
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Search</label>
+        <div class="input-group">
+          <input type="text"
+                 class="form-control"
+                 placeholder="Search name or email"
+                 [(ngModel)]="searchText" />
+          <button class="btn btn-primary" (click)="onSearch()">Search</button>
+          <button class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Page Size -->
+      <div class="col-md-2">
+        <label class="form-label fw-semibold">Page Size</label>
+        <select class="form-select" (change)="changePageSize(+$any($event.target).value)">
+          <option [value]="5">5</option>
+          <option [value]="10" selected>10</option>
+          <option [value]="25">25</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMPLOYEE TABLE -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-hover align-middle">
+
+      <thead class="table-dark">
+        <tr>
+          <th (click)="sortBy('firstName')" style="cursor:pointer">Name</th>
+          <th (click)="sortBy('email')" style="cursor:pointer">Email</th>
+          <th (click)="sortBy('departmentID')" style="cursor:pointer">Department</th>
+          <th (click)="sortBy('salary')" style="cursor:pointer">Salary</th>
+          <th (click)="sortBy('dateOfJoining')" style="cursor:pointer">Joining Date</th>
+          <th>Active</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let e of employees">
+          <td>{{ e.firstName }} {{ e.lastName }}</td>
+          <td>{{ e.email }}</td>
+          <td>{{ getDepartmentName(e.departmentID) }}</td>
+          <td>{{ e.salary | currency:'INR' }}</td>
+          <td>{{ e.dateOfJoining | date:'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="badge" [class.bg-success]="e.isActive" [class.bg-danger]="!e.isActive">
+              {{ e.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="d-flex justify-content-center mt-3 gap-3">
+
+    <button class="btn btn-outline-primary"
+            (click)="changePage(($any(filter).page ?? 1) - 1)"
+            [disabled]="($any(filter).page ?? 1) <= 1">
+      ‹ Prev
+    </button>
+
+    <span class="align-self-center fw-semibold">
+      Page {{ $any(filter).page ?? 1 }}
+    </span>
+
+    <button class="btn btn-outline-primary"
+            (click)="changePage(($any(filter).page ?? 1) + 1)"
+            [disabled]="employees.length < ($any(filter).pageSize ?? 0)">
+      Next ›
+    </button>
+
+  </div>
+
 </div>

@@ -5,6 +5,7 @@ import { Employee } from '../../Shared/Models/employee.model';
 import { Department } from '../../Shared/Models/department.model';
 import { EmployeeFilter } from '../../Shared/Models/employee-filter-request.model';
 import { ApiService } from '../../Shared/Services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -28,7 +29,7 @@ employees: Employee[] = [];
 
   searchText = '';
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadDepartments();
@@ -99,4 +100,12 @@ employees: Employee[] = [];
     const dept = this.departments.find(d => d.departmentID === departmentID);
     return dept ? dept.departmentName : (departmentID ?? '');
   }
+  goToAddEmployee() {
+  this.router.navigate(['/add-employee']);
+}
+
+goToProjectSummary() {
+  this.router.navigate(['/project-summary']);
+}
+
 }

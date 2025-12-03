@@ -1,8 +1,18 @@
-<h3>Employee Project Summary</h3>
-<table>
-  <thead>
-    <tr><th>Name</th><th>Email</th><th>Department</th><th>Project Count</th><th></th></tr>
+<h3 class="mb-4">Employee Project Summary</h3>
+<div class="mb-3">
+  <button class="btn btn-secondary" (click)="backToEmployeeList()">← Back to Employee List</button>
+</div>
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Department</th>
+      <th>Project Count</th>
+      <th>Action</th>
+    </tr>
   </thead>
+
   <tbody>
     <tr *ngFor="let s of summary">
       <td>{{ s.firstName }} {{ s.lastName }}</td>
@@ -10,18 +20,32 @@
       <td>{{ s.departmentName }}</td>
       <td>{{ s.projectCount }}</td>
       <td>
-        <button (click)="drill(s.employeeID, s.firstName + ' ' + s.lastName)">View Projects</button>
+        <button
+          class="btn btn-sm btn-primary"
+          (click)="drill(s.employeeID, s.firstName + ' ' + s.lastName)">
+          View Projects
+        </button>
       </td>
     </tr>
   </tbody>
 </table>
 
-<div *ngIf="selectedEmployeeProjects">
-  <h4>Projects for {{ selectedEmployeeName }}</h4>
-  <button (click)="closeDrill()">Close</button>
-  <ul>
-    <li *ngFor="let p of selectedEmployeeProjects">
-      {{ p.projectName }} ({{ p.startDate | date:'yyyy-MM-dd' }} - {{ p.endDate ? (p.endDate|date:'yyyy-MM-dd') : 'Ongoing' }})
+<!-- Drilldown Section -->
+<div *ngIf="selectedEmployeeProjects" class="mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 class="mb-0">Projects for {{ selectedEmployeeName }}</h4>
+    <button class="btn btn-danger btn-sm" (click)="closeDrill()">Close</button>
+  </div>
+
+  <ul class="list-group">
+    <li *ngFor="let p of selectedEmployeeProjects" class="list-group-item">
+      <strong>{{ p.projectName }}</strong>
+      <br />
+      <span class="text-muted">
+        {{ p.startDate | date:'yyyy-MM-dd' }} -
+        {{ p.endDate ? (p.endDate | date:'yyyy-MM-dd') : 'Ongoing' }}
+      </span>
     </li>
   </ul>
 </div>
