@@ -1,0 +1,58 @@
+<p>employee-list works!</p>
+<div class="controls">
+  <div>
+    <label>Department:</label>
+    <select (change)="onDepartmentChange($any($event.target).value ? +$any($event.target).value : null)">
+      <option value="">All</option>
+      <option *ngFor="let d of departments" [value]="d.departmentID">{{ d.departmentName }}</option>
+    </select>
+  </div>
+
+  <div>
+    <input type="text" placeholder="Search name or email" [(ngModel)]="searchText" />
+    <button (click)="onSearch()">Search</button>
+    <button (click)="clearFilters()">Clear</button>
+  </div>
+
+  <div>
+    <label>Page size</label>
+    <select (change)="changePageSize(+$any($event.target).value)">
+      <option [value]="5">5</option>
+      <option [value]="10" selected>10</option>
+      <option [value]="25">25</option>
+    </select>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th (click)="sortBy('firstName')">Name</th>
+      <th (click)="sortBy('email')">Email</th>
+      <th (click)="sortBy('departmentID')">Department</th>
+      <th (click)="sortBy('salary')">Salary</th>
+      <th (click)="sortBy('dateOfJoining')">Joining Date</th>
+      <th>Active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let e of employees">
+      <td>{{ e.firstName }} {{ e.lastName }}</td>
+      <td>{{ e.email }}</td>
+      <td>
+        <!-- You may want to map departmentID to name on frontend; optionally send departmentName from API -->
+        {{ getDepartmentName(e.departmentID) }}
+      </td>
+      <td>{{ e.salary | currency }}</td>
+      <td>{{ e.dateOfJoining | date:'yyyy-MM-dd' }}</td>
+      <td>{{ e.isActive ? 'Yes' : 'No' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- simple pagination -->
+<div class="pagination">
+  <button (click)="changePage(($any(filter).page ?? 1) - 1)" [disabled]="($any(filter).page ?? 1) <= 1">Prev</button>
+  <span>Page {{ $any(filter).page ?? 1 }}</span>
+  <button (click)="changePage(($any(filter).page ?? 1) + 1)" [disabled]="employees.length < ($any(filter).pageSize ?? 0)">Next</button>
+</div>

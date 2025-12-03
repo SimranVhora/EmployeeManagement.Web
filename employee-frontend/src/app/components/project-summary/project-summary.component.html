@@ -1,0 +1,27 @@
+<h3>Employee Project Summary</h3>
+<table>
+  <thead>
+    <tr><th>Name</th><th>Email</th><th>Department</th><th>Project Count</th><th></th></tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let s of summary">
+      <td>{{ s.firstName }} {{ s.lastName }}</td>
+      <td>{{ s.email }}</td>
+      <td>{{ s.departmentName }}</td>
+      <td>{{ s.projectCount }}</td>
+      <td>
+        <button (click)="drill(s.employeeID, s.firstName + ' ' + s.lastName)">View Projects</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="selectedEmployeeProjects">
+  <h4>Projects for {{ selectedEmployeeName }}</h4>
+  <button (click)="closeDrill()">Close</button>
+  <ul>
+    <li *ngFor="let p of selectedEmployeeProjects">
+      {{ p.projectName }} ({{ p.startDate | date:'yyyy-MM-dd' }} - {{ p.endDate ? (p.endDate|date:'yyyy-MM-dd') : 'Ongoing' }})
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,64 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label>First Name</label>
+    <input formControlName="firstName" />
+    <div *ngIf="f.firstName.touched && f.firstName.invalid" class="error">
+      <div *ngIf="f.firstName.errors?.required">First name is required</div>
+      <div *ngIf="f.firstName.errors?.maxlength">Max 50 chars</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Last Name</label>
+    <input formControlName="lastName" />
+    <div *ngIf="f.lastName.touched && f.lastName.invalid" class="error">
+      <div *ngIf="f.lastName.errors?.required">Last name is required</div>
+      <div *ngIf="f.lastName.errors?.maxlength">Max 50 chars</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Email</label>
+    <input formControlName="email" />
+    <div *ngIf="f.email.touched && f.email.invalid" class="error">
+      <div *ngIf="f.email.errors?.required">Email required</div>
+      <div *ngIf="f.email.errors?.email">Enter valid email</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Department</label>
+    <select formControlName="departmentID">
+      <option value="">Select</option>
+      <option *ngFor="let d of departments" [value]="d.departmentID">{{ d.departmentName }}</option>
+    </select>
+    <div *ngIf="f.departmentID.touched && f.departmentID.invalid" class="error">Department required</div>
+  </div>
+
+  <div>
+    <label>Salary</label>
+    <input formControlName="salary" type="number" step="0.01" />
+    <div *ngIf="f.salary.touched && f.salary.invalid" class="error">
+      <div *ngIf="f.salary.errors?.required">Salary required</div>
+      <div *ngIf="f.salary.errors?.min">Salary must be greater than 0</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Date of Joining</label>
+    <input formControlName="dateOfJoining" type="date"/>
+    <div *ngIf="f.dateOfJoining.touched && f.dateOfJoining.invalid" class="error">
+      <div *ngIf="f.dateOfJoining.errors?.required">Required</div>
+      <div *ngIf="f.dateOfJoining.errors?.futureDate">Date of joining cannot be in the future</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Is Active</label>
+    <input type="checkbox" formControlName="isActive"/>
+  </div>
+
+  <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+
+  <button type="submit" [disabled]="submitting">Add Employee</button>
+</form>
